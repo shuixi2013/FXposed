@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -47,7 +48,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         findPreference("version").setSummary(String.format("%s(%s)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         findPreference("version").setOnPreferenceClickListener(this);
         findPreference("author").setOnPreferenceClickListener(this);
+        findPreference("donate").setOnPreferenceClickListener(this);
         findPreference("github").setOnPreferenceClickListener(this);
+    }
+
+    private SharedPreferences getPrefs() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     private ComponentName getAlias() {
@@ -59,8 +65,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     }
 
     private void checkState() {
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xposed_state", true) && getActivatedModuleVersion() < 0) {
+        if (getActivatedModuleVersion() < 0) {
             showNotActive();
+        } else if (getPrefs().getInt("version_code", -1) < BuildConfig.VERSION_CODE) {
+            showLicenseDialog();
         }
     }
 
@@ -70,6 +78,15 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 .setMessage("模块未激活，请先激活模块并重启手机！")
                 .setPositiveButton("激活", (dialog, id) -> openXposed())
                 .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void showLicenseDialog() {
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage("该模块仅供学习交流使用，可以转载但请勿用于商业用途！\n\n使用该模块带来的任何风险和后果自行承担！\n\n这个模块应该就是我为 Flyme 做的最后一个模块了，如果没有什么大改动（Flyme7 的话等稳定版出来了再说）就不更新了\n")
+                .setPositiveButton("同意", (dialog, which) -> getPrefs().edit().putInt("version_code", BuildConfig.VERSION_CODE).apply())
+                .setNegativeButton("退出", (dialog, which) -> finish())
                 .show();
     }
 
@@ -141,19 +158,45 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "version":
-                goUri("https://github.com/zpp0196/FXposed/releases");
+                openCoolApk("me.zpp0196.fxposed");
                 break;
             case "author":
-                goUri("https://weibo.com/u/5844596591");
+                openUrl("https://weibo.com/u/5844596591");
+                break;
+            case "donate":
+                openAlipay("FKX03149H8YOUWESHOCEC6");
                 break;
             case "github":
-                goUri("https://github.com/zpp0196/FXposed");
+                openUrl("https://github.com/zpp0196/FXposed");
                 break;
         }
         return false;
     }
 
-    private void goUri(String uri) {
+    public void openAlipay(String qrcode) {
+        try {
+            getPackageManager().getPackageInfo("com.eg.android.AlipayGphone", PackageManager.GET_ACTIVITIES);
+            openUrl("alipayqr://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=https://qr.alipay.com/" + qrcode + "%3F_s%3Dweb-other&_t=");
+        } catch (PackageManager.NameNotFoundException e) {
+            openUrl("https://mobilecodec.alipay.com/client_download.htm?qrcode=" + qrcode);
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    private void openCoolApk(String packageName) {
+        try {
+            String str = "market://details?id=" + packageName;
+            Intent intent = new Intent("android.intent.action.VIEW");
+            intent.setData(Uri.parse(str));
+            intent.setPackage("com.coolapk.market");
+            intent.setFlags(0x10000000);
+            startActivity(intent);
+        } catch (Exception e) {
+            openUrl("http://www.coolapk.com/apk/" + packageName);
+        }
+    }
+
+    private void openUrl(String uri) {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         Uri content_url = Uri.parse(uri);

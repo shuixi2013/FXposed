@@ -31,7 +31,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="仅供测试" />
+            android:value="Flyme 小工具" />
         <meta-data
             android:name="xposedminversion"
             android:value="82" />

@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="主题美化">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="system_font"
+        android:title="自定义字体" />
+
+    <EditTextPreference
+        android:dependency="system_font"
+        android:key="system_font_path"
+        android:title="字体文件目录" />
+
+    <PreferenceCategory android:title="隐藏 Root">
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="cotton_theme"
-            android:summary="无限时长试用主题字体混搭"
-            android:title="主题和谐" />
+            android:key="root_mzNfcPay"
+            android:title="Meizu Pay" />
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="system_font"
-            android:summary="手机全局使用自定义的字体"
-            android:title="自定义字体" />
+            android:key="root_mzUpdate"
+            android:title="系统更新" />
 
-        <EditTextPreference
-            android:dependency="system_font"
-            android:key="system_font_path"
-            android:title="字体文件目录" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="root_theme"
+            android:title="主题美化" />
 
     </PreferenceCategory>
 
@@ -45,38 +53,20 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="mzinstaller_unknown"
-            android:summary="跳过未知应用扫描等待，如有风险等其他问题自行承担后果！"
-            android:title="未知应用扫描" />
+            android:key="mzInstaller_unknown"
+            android:title="跳过未知应用扫描" />
 
         <SwitchPreference
             android:defaultValue="true"
-            android:dependency="mzinstaller_unknown"
-            android:key="mzinstaller_confirm"
+            android:dependency="mzInstaller_unknown"
+            android:key="mzInstaller_confirm"
             android:summary="二次确认安装按钮，关闭后缩短安装时间。"
             android:title="确认安装" />
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="mzinstaller_virus"
-            android:summary="跳过应用病毒扫描等待，如有风险等其他问题自行承担后果！"
-            android:title="应用病毒扫描" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Root 检测">
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="mznfcpay_root"
-            android:summary="Root 后可以使用 Meizu Pay，如有风险等其他问题自行承担后果！"
-            android:title="Meizu Pay" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="mzupdate_root"
-            android:summary="Root 后可以使用 OTA 更新系统，如有风险等其他问题自行承担后果！"
-            android:title="系统更新" />
+            android:key="mzInstaller_virus"
+            android:title="跳过应用病毒扫描" />
 
     </PreferenceCategory>
 
@@ -85,11 +75,6 @@
         <SwitchPreference
             android:key="desktop_icon"
             android:title="桌面应用图标" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="xposed_state"
-            android:title="Xposed 状态检测" />
 
     </PreferenceCategory>
 
@@ -103,6 +88,10 @@
             android:key="author"
             android:summary="zpp0196"
             android:title="作者" />
+
+        <Preference
+            android:key="donate"
+            android:title="捐赠" />
 
         <Preference
             android:key="github"
