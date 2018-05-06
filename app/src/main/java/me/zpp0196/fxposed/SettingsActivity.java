@@ -84,7 +84,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private void showLicenseDialog() {
         new AlertDialog.Builder(this)
                 .setCancelable(false)
-                .setMessage("该模块仅供学习交流使用，可以转载但请勿用于商业用途！\n\n使用该模块带来的任何风险和后果自行承担！\n\n这个模块应该就是我为 Flyme 做的最后一个模块了，如果没有什么大改动（Flyme7 的话等稳定版出来了再说）就不更新了\n")
+                .setMessage("该模块仅供学习交流使用，可以转载但请勿用于商业用途！\n\n使用该模块带来的任何风险和后果自行承担！\n\nPS：Flyme7 好像有部分功能不能用\n")
                 .setPositiveButton("同意", (dialog, which) -> getPrefs().edit().putInt("version_code", BuildConfig.VERSION_CODE).apply())
                 .setNegativeButton("退出", (dialog, which) -> finish())
                 .show();

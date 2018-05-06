@@ -91,10 +91,12 @@ public class Hooks implements IXposedHookLoadPackage {
         }
 
         if (isLoadPackage("com.meizu.customizecenter") && getBool("root_theme", false)) {
+            // device_states
             findAndHookMethod("com.meizu.customizecenter.h.al", "h", Context.class, XC_MethodReplacement.returnConstant(0));
             findAndHookMethod("com.meizu.customizecenter.g.ak", "h", Context.class, XC_MethodReplacement.returnConstant(0));
             findAndHookMethod("com.meizu.customizecenter.h.am", "h", Context.class, XC_MethodReplacement.returnConstant(0));
             findAndHookMethod("com.meizu.customizecenter.i.am", "h", Context.class, XC_MethodReplacement.returnConstant(0));
+            findAndHookMethod("com.meizu.customizecenter.manager.utilstool.a.a", "e", Context.class, XC_MethodReplacement.returnConstant(0));
         }
     }
 
